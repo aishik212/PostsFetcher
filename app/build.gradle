@@ -7,6 +7,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        releaseKey {
+            storeFile file('C:\\Users\\kirtu\\AndroidStudioProjects\\GitShowcase\\PostsFetcher\\releaseKey.jks')
+            storePassword 'releaseKey'
+            keyAlias 'releaseKey'
+            keyPassword 'releaseKey'
+        }
+    }
     namespace 'com.textsdev.postsfetcher'
     compileSdk 34
 
@@ -24,6 +32,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseKey
+        }
+        debug {
+            signingConfig signingConfigs.releaseKey
         }
     }
     compileOptions {
