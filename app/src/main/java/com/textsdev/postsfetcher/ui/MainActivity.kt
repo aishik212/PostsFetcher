@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.textsdev.postsfetcher.databinding.ActivityMainBinding
 import com.textsdev.postsfetcher.model.PostsModel
 import com.textsdev.postsfetcher.ui.adapter.MainAdapter
@@ -67,6 +68,10 @@ class MainActivity : AppCompatActivity() {
                 inflate.loaderTv.visibility = VISIBLE
             } else {
                 inflate.loaderTv.visibility = GONE
+            }
+
+            uiState.isError?.let {
+                Snackbar.make(inflate.root, it, Snackbar.LENGTH_SHORT).show()
             }
         }
     }

@@ -33,6 +33,7 @@ class MainViewModel @Inject constructor(private val apiService: ApiService) : Vi
 
     fun fetchPosts(page: Int) {
         showLoader()
+        clearError()
         CoroutineScope(Dispatchers.IO).launch {
             // Simulate fetching data from an API
             val newData = mutableListOf<PostsModel>()
@@ -42,10 +43,10 @@ class MainViewModel @Inject constructor(private val apiService: ApiService) : Vi
                     newData.add(apiService.getPosts(i + 1))
                     fetchComments(i + 1)
                 } catch (e: Exception) {
+                    showError("Unable to fetch posts")
                     Log.e("ERROR", "fetchPostsError : ${e.localizedMessage}")
                 }
             }
-            Log.d("texts", "fetchPosts: Update")
             _postsData.postValue(newData)
         }
     }
@@ -67,6 +68,14 @@ class MainViewModel @Inject constructor(private val apiService: ApiService) : Vi
         }
     }
 
+    fun showError(e: String) {
+        _uiState.postValue(_uiState.value?.copy(isError = e))
+    }
+
+    fun clearError() {
+        _uiState.postValue(_uiState.value?.copy(isError = null))
+    }
+
     fun hideLoader() {
         _uiState.value = _uiState.value?.copy(isLoading = false)
     }
@@ -77,8 +86,6 @@ class MainViewModel @Inject constructor(private val apiService: ApiService) : Vi
 
     fun getCommentsOfPost(id: Int): List<CommentsModel.CommentsModelItem> {
         //Get Comments from cached data
-        _commentsData.forEach {
-        }
         return _commentsData.filter { commentsModel ->
             commentsModel.postId == id
         }
